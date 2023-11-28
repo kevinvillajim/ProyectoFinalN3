@@ -51,3 +51,15 @@ function enviarFormulario() {
 
 	document.getElementById("alumno-id-edit").value = alumnoId;
 }
+
+ocument.querySelectorAll(".edit-button").forEach((button) => {
+	button.addEventListener("click", () => {
+		document.getElementById("alumno-id-edit").value = button.dataset.id;
+		document.getElementById("dni-edit").value = button.dataset.dni;
+		document.getElementById("email-edit").value = button.dataset.email;
+		document.getElementById("name-edit").value = button.dataset.nombre;
+		document.getElementById("direccion-edit").value = button.dataset.direccion;
+		document.getElementById("birth-edit").value = button.dataset.nacimiento;
+		// Llenar los demás campos del formulario...
+	});
+});

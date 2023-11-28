@@ -1,5 +1,7 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Usuario.php";
+require_once "AlumnosController.php";
+
 
 class MaestrosController extends AlumnosController
 {

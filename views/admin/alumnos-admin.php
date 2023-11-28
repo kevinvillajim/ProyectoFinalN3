@@ -125,46 +125,44 @@
                             </thead>
                             <tbody>
                                 <?php
-                                var_dump($alumnos);
-
                                 foreach ($alumnos as $alumno) {
                                     ?>
-                                    <tr>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["id"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["dni"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["nombre"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["email"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["direccion"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["nacimiento"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
-                                            <span class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new"
-                                                data-alumno-id="<?= $alumno["id"] ?>">
-                                                edit
-                                            </span>
-                                            <form action="" method="POST">
-                                                <input type="hidden" name=action value="delete" />
-                                                <input type="number" hidden value="<?= $alumno["id"] ?>" name="id" />
-                                                <button type="submit" class="bg-[none] border-[none]">
-                                                    <span class="material-symbols-outlined cursor-pointer text-[red]">
-                                                        delete
-                                                    </span>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <?php
+                                <tr>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["id"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["dni"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["nombre"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["email"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["direccion"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["nacimiento"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
+                                        <span class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new"
+                                            data-alumno-id="<?= $alumno["id"] ?>">
+                                            edit
+                                        </span>
+                                        <form action="" method="POST">
+                                            <input type="hidden" name=action value="delete" />
+                                            <input type="number" hidden value="<?= $alumno["id"] ?>" name="id" />
+                                            <button type="submit" class="bg-[none] border-[none]">
+                                                <span class="material-symbols-outlined cursor-pointer text-[red]">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php
                                 }
                                 ?>
                             </tbody>
@@ -181,7 +179,7 @@
             </div>
             <h1 class="text-[28px] mb-[1rem]">Agregar Alumno</h1>
             <hr />
-            <div>
+            <div id="alumno-view-<?= $alumno["id"] ?>" class="alumno-view">
                 <form class="space-y-[0.5rem] my-[1rem]" action="/alumnos/admin" method="POST">
                     <label for="dni-create" class="text-[13px] font-semibold">DNI</label>
                     <input name="dni-create" id="dni-create" placeholder="Ingrese la matrícula"
@@ -215,6 +213,8 @@
             </div>
         </div>
     </div>
+    <?php foreach ($alumnos as $alumno) {
+        ?>
     <div id="edit" class="w-screen h-screen bg-[#000] bg-opacity-50 absolute top-0 grid place-content-center">
         <div class="w-[25rem] p-[1rem] bg-[#fff] shadow-xl opacity-100">
             <div class="flex justify-end">
@@ -222,6 +222,7 @@
             </div>
             <h1 class="text-[28px] mb-[1rem]">Editar Alumno</h1>
             <hr />
+
             <div id="modal-edit" class="modal">
                 <form id="form-edit" action="" method="POST" class="space-y-[0.5rem] my-[1rem]">
                     <input type="hidden" id="alumno-id-edit" name="alumno-id-edit" value="<?= $alumno["id"] ?>" />
@@ -255,8 +256,12 @@
                     </div>
                 </form>
             </div>
+
         </div>
-    </div>
+        <?php
+    }
+    ?>
+        < </div>
 </body>
 
 </html>

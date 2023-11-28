@@ -36,6 +36,11 @@ class Usuario extends Model
                 // Actualizar clase_asignada a NULL en la tabla 'usuarios'
                 $this->db->query("UPDATE usuarios SET clase_asignada = NULL WHERE id = $id");
 
+                // Aquí es donde necesitas actualizar todas las otras tablas que tienen una referencia al usuario
+                // Por ejemplo, si tienes una tabla 'cursos' que tiene una columna 'id_usuario', podrías hacer algo como esto:
+                $this->db->query("UPDATE cursos SET id_usuario = NULL WHERE id_usuario = $id");
+                $this->db->query("UPDATE clases SET id_maestro = NULL WHERE id_usuario = $id");
+
                 // Deshabilitar temporalmente la restricción de clave foránea
                 $this->db->query("SET foreign_key_checks = 0");
 
@@ -54,6 +59,9 @@ class Usuario extends Model
 
                 // Restaurar la restricción de clave foránea
                 $this->db->query("SET foreign_key_checks = 1");
+
+                // Finalmente, eliminar el usuario
+                $this->db->query("DELETE FROM usuarios WHERE id = $id");
 
                 $this->db->commit();
             } else {

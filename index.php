@@ -1,10 +1,16 @@
 <?php
 
+require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/maestro/DashboardControllerMaestro.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/alumno/DashboardControllerAlumno.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/HomeController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/AlumnosController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/ClasesController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/MaestrosController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/PermisosController.php");
+
+
+$DashboardControllerMaestro = new DashboardControllerMaestro();
+$DashboardControllerAlumno = new DashboardControllerAlumno();
 $HomeController = new HomeController();
 $AlumnosController = new AlumnosController();
 $ClasesController = new ClasesController();
@@ -100,6 +106,13 @@ if ($method === "GET") {
   }
   if ($route[0] == '/permisos/admin') {
     $PermisosController->index();
+  }
+  if ($route[0] == '/dashboard/alumno') {
+    $DashboardControllerAlumno->index();
+  }
+
+  if ($route[0] == '/dashboard/maestro') {
+    $DashboardControllerMaestro->index();
   }
 
 }
