@@ -1,3 +1,20 @@
+<?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+if (!isset($_SESSION["user"])) {
+    echo "No autorizado, debes iniciar sesión primero.";
+    echo "</br>";
+    echo "<a href='/login'>Regresar a Login</a>";
+    die();
+} else if ($_SESSION["user"]["id_rol"] != 3) {
+    echo "No autorizado, no tienes permiso para acceder a esta página.";
+    echo "</br>";
+    echo "<a href='/login'>Regresar</a>";
+    die();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,22 +44,28 @@
             <hr />
             <div class="p-[1rem]">
                 <h2 class="text-[#fff]">Alumno</h2>
-                <h2 class="text-[#fff]"><?php $estudiante = "Marlon Chito Vera";
-                                        echo "$estudiante"; ?></h2>
+                <h2 class="text-[#fff]">
+                    <?php $estudiante = $_SESSION["user"]["nombre"];
+                    echo "$estudiante"; ?>
+                </h2>
             </div>
             <hr />
             <div class="p-[1rem] space-y-[1rem]">
                 <h2 class="text-center text-[#fff]">MENU ALUMNOS</h2>
-                <h3 class="text-[#fff] flex cursor-pointer">
-                    <span class="material-symbols-outlined mr-[1rem]">
-                        <span class="material-symbols-outlined">
-                            library_books
-                        </span> </span>Ver Calificaciones
-                </h3>
-                <h3 class="text-[#fff] flex cursor-pointer">
-                    <span class="material-symbols-outlined mr-[1rem]">
-                        <span class="material-symbols-outlined"> assignment </span> </span>Administra tus Clases
-                </h3>
+                <a href="/calificaciones/alumno">
+                    <h3 class="text-[#fff] flex cursor-pointer my-[1rem]">
+                        <span class="material-symbols-outlined mr-[1rem]">
+                            <span class="material-symbols-outlined">
+                                library_books
+                            </span> </span>Ver Calificaciones
+                    </h3>
+                </a>
+                <a href="/clases/alumno">
+                    <h3 class="text-[#fff] flex cursor-pointer my-[1rem]">
+                        <span class="material-symbols-outlined mr-[1rem]">
+                            <span class="material-symbols-outlined"> assignment </span> </span>Administra tus Clases
+                    </h3>
+                </a>
             </div>
         </div>
         <div id="content" class="bg-[#f4f6fb] w-[100%] h-[100%]">
@@ -52,7 +75,9 @@
                     <h2 class="ml-[1rem]">Home</h2>
                 </div>
                 <div class="flex cursor-pointer" id=show-modal>
-                    <h2 class="ml-[1rem]"><?php echo "$estudiante"; ?></h2>
+                    <h2 class="ml-[1rem]">
+                        <?php echo "$estudiante"; ?>
+                    </h2>
                     <span id="more" class="material-symbols-outlined">expand_more</span>
                 </div>
             </header>
@@ -63,7 +88,7 @@
                     <span class="text-modal text-[#fff]">My Profile</span>
                 </div>
                 <hr class="border-[#fff]">
-                <div class="hover:bg-[#be6570] cursor-pointer rounded-xl p-[0.5rem] flex items-center">
+                <div id="logout" class="hover:bg-[#be6570] cursor-pointer rounded-xl p-[0.5rem] flex items-center">
                     <span class="material-symbols-outlined mr-[0.3rem] text-[#fff]"> logout </span>
                     <span class="text-modal text-[#fff]">Logout</span>
                 </div>

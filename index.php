@@ -1,5 +1,8 @@
 <?php
-
+require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/alumno/ClasesControllerAlumno.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/LoginController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/alumno/CalificacionesControllerAlumno.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/maestro/AlumnosControllerMaestro.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/maestro/DashboardControllerMaestro.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/alumno/DashboardControllerAlumno.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/HomeController.php");
@@ -8,7 +11,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/ClasesController.ph
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/MaestrosController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/controllers/admin/PermisosController.php");
 
-
+$ClasesControllerAlumno = new ClasesControllerAlumno();
+$LoginController = new LoginController();
+$CalificacionesControllerAlumno = new CalificacionesControllerAlumno();
+$AlumnosControllerMaestro = new AlumnosControllerMaestro();
 $DashboardControllerMaestro = new DashboardControllerMaestro();
 $DashboardControllerAlumno = new DashboardControllerAlumno();
 $HomeController = new HomeController();
@@ -87,6 +93,9 @@ if ($method === "POST") {
 
       break;
 
+    case '/login':
+      $LoginController->login();
+      break;
   }
 
 }
@@ -110,9 +119,20 @@ if ($method === "GET") {
   if ($route[0] == '/dashboard/alumno') {
     $DashboardControllerAlumno->index();
   }
-
   if ($route[0] == '/dashboard/maestro') {
     $DashboardControllerMaestro->index();
+  }
+  if ($route[0] == '/alumnos/maestro') {
+    $AlumnosControllerMaestro->index();
+  }
+  if ($route[0] == '/calificaciones/alumno') {
+    $CalificacionesControllerAlumno->index();
+  }
+  if ($route[0] == '/login') {
+    $LoginController->index();
+  }
+  if ($route[0] == '/clases/alumno') {
+    $ClasesControllerAlumno->index();
   }
 
 }

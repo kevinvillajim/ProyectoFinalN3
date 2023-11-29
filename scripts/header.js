@@ -35,3 +35,7 @@ menuPrincipal.addEventListener("click", () => {
 		switchStateMenu = !switchStateMenu;
 	}
 });
+
+document.getElementById("logout").addEventListener("click", function () {
+	window.location.href = "/models/logout.php";
+});

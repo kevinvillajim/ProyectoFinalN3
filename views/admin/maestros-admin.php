@@ -1,3 +1,20 @@
+<?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+if (!isset($_SESSION["user"])) {
+    echo "No autorizado, debes iniciar sesión primero.";
+    echo "</br>";
+    echo "<a href='/login'>Regresar a Login</a>";
+    die();
+} else if ($_SESSION["user"]["id_rol"] != 1) {
+    echo "No autorizado, no tienes permiso para acceder a esta página.";
+    echo "</br>";
+    echo "<a href='/login'>Regresar</a>";
+    die();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +47,7 @@
             <div class="p-[1rem]">
                 <h2 class="text-[#fff]">admin</h2>
                 <h2 class="text-[#fff]">
-                    <?php $admin = "Administrador";
+                    <?php $admin = $_SESSION["user"]["nombre"];
                     echo "$admin"; ?>
                 </h2>
             </div>
@@ -70,6 +87,7 @@
                 </div>
                 <div class="flex cursor-pointer" id=show-modal>
                     <h2 class="ml-[1rem]">
+                        <?= $admin ?>
                     </h2>
                     <span id="more" class="material-symbols-outlined">expand_more</span>
                 </div>
@@ -81,7 +99,7 @@
                     <span class="text-modal text-[#fff]">My Profile</span>
                 </div>
                 <hr class="border-[#fff]">
-                <div class="hover:bg-[#be6570] cursor-pointer rounded-xl p-[0.5rem] flex items-center">
+                <div id="logout" class="hover:bg-[#be6570] cursor-pointer rounded-xl p-[0.5rem] flex items-center">
                     <span class="material-symbols-outlined mr-[0.3rem] text-[#fff]"> logout </span>
                     <span class="text-modal text-[#fff]">Logout</span>
                 </div>
