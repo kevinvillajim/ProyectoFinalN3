@@ -1,4 +1,4 @@
-#Aún no se encuentra terminada, solo se tiene el sistema del administrador
+#Aún no se encuentra terminada, 75% de progreso
 
 # Instrucciones
 
