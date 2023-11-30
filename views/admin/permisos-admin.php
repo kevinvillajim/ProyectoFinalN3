@@ -136,18 +136,17 @@ if (!isset($_SESSION["user"])) {
                             </thead>
                             <tbody>
                                 <?php
-                                foreach ($permisos as $usuario) {
-
+                                foreach ($data["permisos"] as $usuario) {
                                     ?>
-                                    <tr class="usuario" data-id='<?= $usuario["estado"] ?>'>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $usuario["id"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $usuario["email"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?php
+                                <tr class="usuario" ?>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $usuario["id"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $usuario["email"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?php
                                             $rol = $usuario["id_rol"];
                                             if ($rol == "1") {
                                                 echo "<span class='text-[12px] bg-[#cba51a] p-[0.2rem] rounded-md'>Administrador</span>";
@@ -157,26 +156,24 @@ if (!isset($_SESSION["user"])) {
                                                 echo "<span class='text-[12px] bg-[#6f757e] p-[0.2rem] rounded-md text-[#fff]'>Alumno</span>";
                                             }
                                             ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?php
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?php
                                             if ($usuario["estado"] == "1") {
                                                 echo "<span class='text-[12px] bg-[#33a24f] p-[0.2rem] rounded-md text-[#fff]'>Activo</span>";
                                             } else {
                                                 echo "<span class='text-[12px] bg-[#cc3e4d] p-[0.2rem] rounded-md text-[#fff]'>Inactivo</span>";
                                             }
                                             ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
-
-                                            <button data-id="<?= $usuario["id"] ?>" class="edit-new">
-                                                <span class="material-symbols-outlined cursor-pointer text-[#FFC300]">
-                                                    edit
-                                                </span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <?php
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
+                                        <span data-id="<?= $usuario["id"] ?>"
+                                            class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new">
+                                            edit
+                                        </span>
+                                    </td>
+                                </tr>
+                                <?php
                                 }
                                 ?>
                             </tbody>
@@ -185,6 +182,10 @@ if (!isset($_SESSION["user"])) {
                 </div>
             </div>
         </div>
+
+        <script>
+        var clases = <?= json_encode($clases) ?>;
+        </script>
     </div>
     <div id="edit" class="w-screen h-screen bg-[#000] bg-opacity-50 absolute top-0 grid place-content-center">
         <div class="w-[25rem] p-[1rem] bg-[#fff] shadow-xl opacity-100">
@@ -195,38 +196,43 @@ if (!isset($_SESSION["user"])) {
             <hr />
             <div id="modal-edit" class=modal>
                 <form id="form-edit" method="POST" action="" class="space-y-[0.5rem] my-[1rem]">
-                    <input type="hidden" id="switch-state" name="estado">
-                    <input type="hidden" name="action" value="update" />
-                    <input type="hidden" id="id" name="id" value="" />
-                    <label for="email-edit" class="text-[13px] font-semibold">Email</label>
-                    <input type="email" name="email-edit" id="email-edit" value=""
-                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                    <label for="rol-edit" class="text-[13px] font-semibold">Rol del usuario</label>
-                    <select name="rol-edit" id="rol-edit"
+                    <input type="hidden" id="estado" name="estado">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" id="id" name="id" value="16">
+                    <label for="email" class="text-[13px] font-semibold">Email</label>
+                    <input type="email" name="email" id="email-edit" value=""
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]">
-                        <option selected hidden>Selecciona el rol</option>
-                        <option>admin</option>
+                    <label for="id_rol" class="text-[13px] font-semibold">Rol del usuario</label>
+                    <select name="id_rol" id="rol-edit"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]">
+                        <option selected="" hidden="">Selecciona el rol</option>
+                        <option value="1">admin</option>
+                        <option value="2">Maestro</option>
+                        <option value="3">Alumno</option>
                     </select>
-                    <div class="flex items-center mt-[10rem]">
-                        <div id="switch-button-container">
-                            <div id="switch-button" class="w-[1rem] h-[1rem] bg-[#Ffaeaf] rounded-full cursor-pointer">
+                    <div class="flex items-center mt-[10rem]" bis_skin_checked="1">
+                        <div id="switch-button-container" class="switch" bis_skin_checked="1">
+                            <div id="switch-button"
+                                class="w-[1rem] h-[1rem] bg-[#Ffaeaf] rounded-full cursor-pointer switch" data-value="1"
+                                bis_skin_checked="1">
+                                <input type="hidden" id="status-field" name="status" value="1">
                             </div>
                         </div>
-                        <span id="switch-button-text" class="text-[13px] font-semibold">Usuario Inactivo</span>
+                        <span id="switch-button-text" class="text-[13px] font-semibold">Usuario Activo</span>
                     </div>
 
-                    <hr />
-                    <div class="w-[100%] flex justify-end space-x-[0.5rem] mt-[1rem]">
+                    <hr>
+                    <div class="w-[100%] flex justify-end space-x-[0.5rem] mt-[1rem]" bis_skin_checked="1">
                         <a id="close-edit2"
                             class="bg-[#6a757d] text-[#fff] py-[0.55rem] px-[1rem] cursor-pointer rounded-md">Close
                         </a>
                         <button type="submit" class="bg-[#007bff] text-[#fff] py-[0.5rem] px-[1rem] rounded-md">
                             Guardar cambios
                         </button>
+                    </div>
                 </form>
             </div>
         </div>
-    </div>
     </div>
 </body>
 

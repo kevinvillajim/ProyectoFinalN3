@@ -151,8 +151,8 @@ if (!isset($_SESSION["user"])) {
                                         </td>
                                         <td class="h-[3rem] bg-[#f2f2f2]">
                                             <?php
-                                            if ($clase['maestro']['nombre']) {
-                                                echo $clase['maestro']['nombre'];
+                                            if (isset($clase['maestro'][0]['nombre'])) {
+                                                echo $clase['maestro'][0]['nombre'];
                                             } else {
                                                 echo "<span class='text-[12px] bg-[#cba51a] p-[0.2rem] rounded-md'>Sin asignación</span>";
                                             }
@@ -201,7 +201,7 @@ if (!isset($_SESSION["user"])) {
             <h1 class="text-[28px] mb-[1rem]">Agregar Clase</h1>
             <hr />
             <div>
-                <form class="space-y-[0.5rem] my-[1rem]" action="/clases/admin" method="POST">
+                <form action="" method="POST" class="space-y-[0.5rem] my-[1rem]">
                     <label for="materia-create" class="text-[13px] font-semibold">Materia</label>
                     <input name="materia-create" id="materia-create" placeholder="Ingrese el nombre de la materia"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />

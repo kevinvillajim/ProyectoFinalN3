@@ -72,4 +72,82 @@ class Usuario extends Model
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function updateClaseAsignada($idMaestro, $claseAsignada)
+    {
+        // Actualizar la tabla usuarios
+        $query = "UPDATE usuarios SET clase_asignada = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('si', $claseAsignada, $idMaestro);
+        $stmt->execute();
+        $stmt->close();
+
+        // Actualizar la tabla clases
+        $query = "UPDATE clases SET id_maestro = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ii', $idMaestro, $claseAsignada);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function updateIdMaestro($claseAsignada, $idMaestro)
+    {
+        // Actualizar la tabla clases
+        $query = "UPDATE clases SET id_maestro = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ii', $idMaestro, $claseAsignada);
+        $stmt->execute();
+        $stmt->close();
+
+        // Actualizar la tabla usuarios
+        $query = "UPDATE usuarios SET clase_asignada = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('si', $claseAsignada, $idMaestro);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function update($data)
+    {
+        $query = "UPDATE usuarios SET email = ?, nombre = ?, direccion = ?, nacimiento = ?, clase_asignada = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ssssii', $data['email'], $data['nombre'], $data['direccion'], $data['nacimiento'], $data['clase_asignada'], $data['id']);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function claseExists($claseId)
+    {
+        // Si claseId es null, devolver true
+        if ($claseId === null) {
+            return true;
+        }
+
+        $query = "SELECT * FROM clases WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $claseId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        // Si hay al menos una fila en el resultado, entonces la clase existe
+        return $result->num_rows > 0;
+    }
+
+    public function create($data)
+    {
+        $query = "INSERT INTO usuarios (email, nombre, direccion, nacimiento, id_rol, clase_asignada) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($query);
+
+        // Si 'clase_asignada' es null, usamos NULL en la consulta SQL
+        $clase_asignada = !empty($data['clase_asignada']) ? $data['clase_asignada'] : NULL;
+
+        $stmt->bind_param('ssssis', $data['email'], $data['nombre'], $data['direccion'], $data['nacimiento'], $data['id_rol'], $clase_asignada);
+
+        $stmt->execute();
+        $result = $stmt->insert_id;
+        $stmt->close();
+
+        return $result;
+    }
 }

@@ -144,42 +144,42 @@ if (!isset($_SESSION["user"])) {
                                 <?php
                                 foreach ($alumnos as $alumno) {
                                     ?>
-                                    <tr>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["id"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["dni"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["nombre"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["email"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["direccion"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $alumno["nacimiento"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
-                                            <span class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new"
-                                                data-alumno-id="<?= $alumno["id"] ?>">
-                                                edit
-                                            </span>
-                                            <form action="" method="POST">
-                                                <input type="hidden" name=action value="delete" />
-                                                <input type="number" hidden value="<?= $alumno["id"] ?>" name="id" />
-                                                <button type="submit" class="bg-[none] border-[none]">
-                                                    <span class="material-symbols-outlined cursor-pointer text-[red]">
-                                                        delete
-                                                    </span>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <?php
+                                <tr>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["id"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["dni"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["nombre"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["email"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["direccion"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $alumno["nacimiento"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
+                                        <span class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new"
+                                            data-alumno-id="<?= $alumno["id"] ?>">
+                                            edit
+                                        </span>
+                                        <form action="" method="POST">
+                                            <input type="hidden" name=action value="delete" />
+                                            <input type="number" hidden value="<?= $alumno["id"] ?>" name="id" />
+                                            <button type="submit" class="bg-[none] border-[none]">
+                                                <span class="material-symbols-outlined cursor-pointer text-[red]">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php
                                 }
                                 ?>
                             </tbody>
@@ -230,52 +230,55 @@ if (!isset($_SESSION["user"])) {
             </div>
         </div>
     </div>
+    <script>
+    var alumnos = <?php echo json_encode($alumnos); ?>;
+    </script>
     <?php foreach ($alumnos as $alumno) {
         ?>
-        <div id="edit" class="w-screen h-screen bg-[#000] bg-opacity-50 absolute top-0 grid place-content-center">
-            <div class="w-[25rem] p-[1rem] bg-[#fff] shadow-xl opacity-100">
-                <div class="flex justify-end">
-                    <span id="close-edit" class="material-symbols-outlined cursor-pointer"> close </span>
-                </div>
-                <h1 class="text-[28px] mb-[1rem]">Editar Alumno</h1>
-                <hr />
-
-                <div id="modal-edit" class="modal">
-                    <form id="form-edit" action="" method="POST" class="space-y-[0.5rem] my-[1rem]">
-                        <input type="hidden" id="alumno-id-edit" name="alumno-id-edit" value="<?= $alumno["id"] ?>" />
-                        <label for="dni-edit" class="text-[13px] font-semibold">DNI</label>
-                        <input name="dni-edit" id="dni-edit" value="<?= $alumno["dni"] ?>"
-                            class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                        <label for="email-edit" class="text-[13px] font-semibold">Email</label>
-                        <input type="email" name="email-edit" id="email-edit" value="<?= $alumno["email"] ?>"
-                            class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                        <label for="name-edit" class="text-[13px] font-semibold">Nombre(s)</label>
-                        <input name="name-edit" id="name-edit" value="<?= $alumno["nombre"] ?>"
-                            class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                        <label for="dni-edit" class="text-[13px] font-semibold">Apellido(s)</label>
-                        <input name="apellido-edit" id="apellido-edit" value="Ingrese apellido(s)"
-                            class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                        <label for="apellido-edit" class="text-[13px] font-semibold">Dirección</label>
-                        <input name="direccion-edit" id="direccion-edit" value="<?= $alumno["direccion"] ?>"
-                            class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                        <label for="birth-edit" class="text-[13px] font-semibold">Fecha de nacimiento</label>
-                        <input type="date" name="birth-edit" id="birth-edit" value="<?= $alumno["nacimiento"] ?>"
-                            class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
-                        <input type=hidden name="action" value="update" />
-                        </hr>
-                        <div class="w-[100%] flex justify-end space-x-[0.5rem] mt-[1rem]">
-                            <button id="close-edit2"
-                                class="bg-[#6a757d] text-[#fff] py-[0.55rem] px-[1rem] cursor-pointer rounded-md">Close
-                            </button>
-                            <button type="submit" class="bg-[#007bff] text-[#fff] py-[0.5rem] px-[1rem] rounded-md">
-                                Guardar cambios
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
+    <div id="edit" class="w-screen h-screen bg-[#000] bg-opacity-50 absolute top-0 grid place-content-center">
+        <div class="w-[25rem] p-[1rem] bg-[#fff] shadow-xl opacity-100">
+            <div class="flex justify-end">
+                <span id="close-edit" class="material-symbols-outlined cursor-pointer close"> close </span>
             </div>
-            <?php
+            <h1 class="text-[28px] mb-[1rem]">Editar Alumno</h1>
+            <hr />
+
+            <div id="modal-edit" class="modal">
+                <form id="form-edit" action="" method="POST" class="space-y-[0.5rem] my-[1rem]">
+                    <input type="hidden" id="alumno-id-edit" name="alumno-id-edit" value="<?= $alumno["id"] ?>" />
+                    <label for="dni-edit" class="text-[13px] font-semibold">DNI</label>
+                    <input name="dni-edit" id="dni-edit" value="<?= $alumno["dni"] ?>"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
+                    <label for="email-edit" class="text-[13px] font-semibold">Email</label>
+                    <input type="email" name="email-edit" id="email-edit" value="<?= $alumno["email"] ?>"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
+                    <label for="name-edit" class="text-[13px] font-semibold">Nombre(s)</label>
+                    <input name="name-edit" id="name-edit" value="<?= $alumno["nombre"] ?>"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
+                    <label for="apellido-edit" class="text-[13px] font-semibold">Apellido(s)</label>
+                    <input name="apellido-edit" id="apellido-edit" placeholder="Ingrese su apellido"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
+                    <label for="direccion-edit" class="text-[13px] font-semibold">Dirección</label>
+                    <input name="direccion-edit" id="direccion-edit" value="<?= $alumno["direccion"] ?>"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
+                    <label for="birth-edit" class="text-[13px] font-semibold">Fecha de nacimiento</label>
+                    <input type="date" name="birth-edit" id="birth-edit" value="<?= $alumno["nacimiento"] ?>"
+                        class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
+                    <input type=hidden name="action" value="update" />
+                    </hr>
+                    <div class="w-[100%] flex justify-end space-x-[0.5rem] mt-[1rem]">
+                        <button id="close-edit2"
+                            class="bg-[#6a757d] text-[#fff] py-[0.55rem] px-[1rem] cursor-pointer rounded-md close">Close
+                        </button>
+                        <button type="submit" class="bg-[#007bff] text-[#fff] py-[0.5rem] px-[1rem] rounded-md">
+                            Guardar cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <?php
     }
     ?>
         < </div>

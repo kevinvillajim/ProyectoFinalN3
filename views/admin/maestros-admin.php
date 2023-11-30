@@ -143,50 +143,48 @@ if (!isset($_SESSION["user"])) {
                                 <?php
                                 foreach ($maestros as $maestro) {
                                     ?>
-                                    <tr>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $maestro["id"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $maestro["nombre"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $maestro["email"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $maestro["direccion"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?= $maestro["nacimiento"] ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2]">
-                                            <?php
-                                            if (isset($maestro["nombreClase"]) && is_array($maestro["nombreClase"])) {
+                                <tr>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $maestro["id"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $maestro["nombre"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $maestro["email"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $maestro["direccion"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?= $maestro["nacimiento"] ?>
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2]">
+                                        <?php
+                                            if (isset($maestro["nombreClase"])) {
                                                 echo $maestro["nombreClase"];
-                                            } elseif (is_string($maestro["nombreClase"])) {
-                                                echo "{$maestro["nombreClase"]}";
                                             } else {
                                                 echo "<span class='text-[12px] bg-[#cba51a] p-[0.2rem] rounded-md'>Sin asignación</span>";
                                             }
                                             ?>
-                                        </td>
-                                        <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
-                                            <span data-maestro-id="<?= $maestro["id"] ?>"
-                                                class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new">
-                                                edit
-                                            </span>
-                                            <form action="" method="POST">
-                                                <input type="hidden" name=action value="delete" />
-                                                <input type="number" hidden value="<?= $maestro["id"] ?>" name="id" />
-                                                <button type="submit" class="bg-[none] border-[none]">
-                                                    <span class="material-symbols-outlined cursor-pointer text-[red]">
-                                                        delete
-                                                    </span>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <?php
+                                    </td>
+                                    <td class="h-[3rem] bg-[#f2f2f2] flex justify-evenly items-center">
+                                        <span data-maestro-id="<?= $maestro["id"] ?>"
+                                            class="material-symbols-outlined cursor-pointer text-[#FFC300] edit-new">
+                                            edit
+                                        </span>
+                                        <form action="" method="POST">
+                                            <input type="hidden" name=action value="delete" />
+                                            <input type="number" hidden value="<?= $maestro["id"] ?>" name="id" />
+                                            <button type="submit" class="bg-[none] border-[none]">
+                                                <span class="material-symbols-outlined cursor-pointer text-[red]">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php
                                 }
                                 ?>
                             </tbody>
@@ -204,7 +202,7 @@ if (!isset($_SESSION["user"])) {
             <h1 class="text-[28px] mb-[1rem]">Agregar Maestro</h1>
             <hr />
             <div>
-                <form action="/maestros/admin" method="POST" class="space-y-[0.5rem] my-[1rem]">
+                <form action="" method="POST" class="space-y-[0.5rem] my-[1rem]">
                     <label for="email-create" class="text-[13px] font-semibold">Email</label>
                     <input type="email" name="email-create" id="email-create" placeholder="Ingrese el email"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
@@ -224,7 +222,15 @@ if (!isset($_SESSION["user"])) {
                     <select name="clase-create" id="clase-create"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]">
                         <option selected hidden>Selecciona la Clase</option>
-                        <option>Biología</option>
+                        <?php
+                        foreach ($clases as $clase) {
+                            ?>
+                        <option value="<?php echo $clase["id"] ?>">
+                            <?php echo $clase["clase"] ?>
+                        </option>
+                        <?php
+                        }
+                        ?>
                     </select>
                     <input type="hidden" name="action" value="create" />
                     <hr />
@@ -240,42 +246,56 @@ if (!isset($_SESSION["user"])) {
             </div>
         </div>
     </div>
-    <div id="edit" class="w-screen h-screen bg-[#000] bg-opacity-50 absolute top-0 grid place-content-center">
+    <script>
+    var maestros = <?php echo json_encode($maestros) ?>;
+    </script>
+    <?php
+    foreach ($maestros as $maestro) {
+        ?>
+    <div id="edit" class="w-screen h-screen bg-[#000] bg-opacity-50 absolute top-0 grid place-content-center modal">
         <div class="w-[25rem] p-[1rem] bg-[#fff] shadow-xl opacity-100">
             <div class="flex justify-end">
-                <span id="close-edit" class="material-symbols-outlined cursor-pointer"> close </span>
+                <span id="close-edit" class="material-symbols-outlined cursor-pointer close"> close </span>
             </div>
             <h1 class="text-[28px] mb-[1rem]">Editar maestro</h1>
             <hr />
             <div id="modal-edit" class="modal">
                 <form id="form-edit" action="" method="POST" class="space-y-[0.5rem] my-[1rem]">
-                    <input type="hidden" id="maestro-id-edit" name="maestro-id-edit" value="<?= $maestro["id"] ?>" />
+                    <input type="hidden" id="maestro-id-edit" name="maestro-id-edit" />
                     <label for="email-edit" class="text-[13px] font-semibold">Email</label>
-                    <input type="email" name="email-edit" id="email-edit" value="<?= $maestro["email"] ?>"
+                    <input type="email" name="email-edit" id="email-edit"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
                     <label for="name-edit" class="text-[13px] font-semibold">Nombre(s)</label>
-                    <input name="name-edit" id="name-edit" value="<?= $maestro["nombre"] ?>"
+                    <input name="name-edit" id="name-edit"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
                     <label for="apellido-edit" class="text-[13px] font-semibold">Apellido(s)</label>
                     <input name="apellido-edit" id="apellido-edit" placeholder="Ingrese apellido(s)"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
                     <label for="apellido-edit" class="text-[13px] font-semibold">Dirección</label>
-                    <input name="direccion-edit" id="direccion-edit" value="<?= $maestro["direccion"] ?>"
+                    <input name="direccion-edit" id="direccion-edit"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
                     <label for="birth-edit" class="text-[13px] font-semibold">Fecha de nacimiento</label>
-                    <input type="date" name="birth-edit" id="birth-edit" value="<?= $maestro["nacimiento"] ?>"
+                    <input type="date" name="birth-edit" id="birth-edit"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]" />
                     <label for="clase-edit" class="text-[13px] font-semibold">Clase Asignada</label>
                     <select name="clase-edit" id="clase-edit"
                         class="w-[100%] h-[2rem] border border-slate-300 rounded-md px-[0.8rem] text-[#797675]">
                         <option selected hidden>Selecciona la Clase</option>
-                        <option>Biología</option>
+                        <?php
+                            foreach ($clases as $clase) {
+                                ?>
+                        <option value="<?php echo $clase["id"] ?>">
+                            <?php echo $clase["clase"] ?>
+                        </option>
+                        <?php
+                            }
+                            ?>
                     </select>
                     <input type=hidden name="action" value="update" />
                     <hr />
                     <div class="w-[100%] flex justify-end space-x-[0.5rem] mt-[1rem]">
                         <a id="close-edit2"
-                            class="bg-[#6a757d] text-[#fff] py-[0.55rem] px-[1rem] cursor-pointer rounded-md">Close
+                            class="bg-[#6a757d] text-[#fff] py-[0.55rem] px-[1rem] cursor-pointer rounded-md close">Close
                         </a>
                         <button type="submit" class="bg-[#007bff] text-[#fff] py-[0.5rem] px-[1rem] rounded-md">
                             Guardar cambios
@@ -285,6 +305,9 @@ if (!isset($_SESSION["user"])) {
             </div>
         </div>
     </div>
+    <?php
+    }
+    ?>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . "/controllers/maestro/AlumnosControllerMaestro.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Calificacion.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/config/Database.php";
 
 class CalificacionesControllerAlumno extends AlumnosControllerMaestro
 {

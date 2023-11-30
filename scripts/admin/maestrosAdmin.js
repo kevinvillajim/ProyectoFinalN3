@@ -16,38 +16,34 @@ closeCreate.addEventListener("click", toggleModal);
 closeCreate2.addEventListener("click", toggleModal);
 
 //Modal Editar Maestro
+const editButtons = document.getElementsByClassName("edit-new");
+const modal = document.getElementById("edit");
+const closeButtons = modal.getElementsByClassName("close");
 
-const edit = document.getElementsByClassName("edit-new");
-const editArray = Array.from(edit);
-const editMaestroModal = document.getElementById("edit");
-const closeEdit = document.getElementById("close-edit");
-const closeEdit2 = document.getElementById("close-edit2");
+function openModal(maestroId) {
+	const maestro = maestros.find((m) => m.id === maestroId);
 
-let switchStateModalEdit = true;
-function toggleModalEdit(alumnoId) {
-	const modalEdit = document.getElementById("modal-edit");
-	modalEdit.dataset.alumnoId = alumnoId;
-	editMaestroModal.classList.toggle("show");
-	switchStateModalEdit = !switchStateModalEdit;
+	document.getElementById("maestro-id-edit").value = maestro.id;
+	document.getElementById("email-edit").value = maestro.email;
+	document.getElementById("name-edit").value = maestro.nombre;
+	document.getElementById("direccion-edit").value = maestro.direccion;
+	document.getElementById("birth-edit").value = maestro.nacimiento;
+	document.getElementById("clase-edit").value = maestro.clase_asignada;
+
+	modal.classList.add("show");
 }
 
-closeEdit.addEventListener("click", toggleModalEdit);
-closeEdit2.addEventListener("click", toggleModalEdit);
+function closeModal() {
+	modal.classList.remove("show");
+}
 
-document.addEventListener("DOMContentLoaded", function () {
-	const editButtons = document.querySelectorAll(".edit-new");
-
-	editButtons.forEach((button) => {
-		button.addEventListener("click", function () {
-			const alumnoId = button.dataset.alumnoId;
-			toggleModalEdit(alumnoId);
-		});
+Array.from(editButtons).forEach((button) => {
+	button.addEventListener("click", function () {
+		const id = button.dataset.maestroId;
+		openModal(id);
 	});
 });
 
-function enviarFormulario() {
-	const modalEdit = document.getElementById("modal-edit");
-	const alumnoId = modalEdit.dataset.alumnoId;
-
-	document.getElementById("alumno-id-edit").value = alumnoId;
-}
+Array.from(closeButtons).forEach((button) => {
+	button.addEventListener("click", closeModal);
+});

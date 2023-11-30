@@ -1,5 +1,5 @@
 <?php
-
+require_once $_SERVER["DOCUMENT_ROOT"] . "/models/usuario.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Model.php";
 
 class AlumnosController
@@ -27,13 +27,15 @@ class AlumnosController
     public function edit($id)
     {
         $alumno = $this->model->find($id);
-        // Utiliza un nombre de sesión consistente
         $_SESSION["alumno_id_edit"] = $alumno["id"];
         include $_SERVER["DOCUMENT_ROOT"] . $this->ruta;
     }
 
+
     public function update($request)
     {
+        $this->model = new Usuario();
+
         $alumnoData = [
             'id' => $request['alumno-id-edit'],
             'dni' => $request['dni-edit'],
@@ -42,6 +44,7 @@ class AlumnosController
             'direccion' => $request['direccion-edit'],
             'nacimiento' => $request['birth-edit']
         ];
+
         $this->model->update($alumnoData);
         header("Location: /alumnos/admin");
         exit();

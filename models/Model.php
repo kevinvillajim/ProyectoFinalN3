@@ -99,8 +99,19 @@ class Model
 
     public function customQuery($sql)
     {
-        $res = $this->db->query($sql);
-        $data = $res->fetch_all(MYSQLI_ASSOC);
-        return $data;
+        $result = $this->db->query($sql);
+
+        if ($result === false) {
+            // La consulta SQL falló, manejar el error...
+            throw new Exception('La consulta SQL falló');
+        }
+
+        // Si la consulta fue un SELECT, devolver todas las filas como un array de arrays
+        if ($result instanceof mysqli_result) {
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        // Si la consulta no fue un SELECT, devolver TRUE para indicar que la consulta fue exitosa
+        return true;
     }
 }

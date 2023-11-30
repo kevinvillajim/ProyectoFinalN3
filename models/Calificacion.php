@@ -1,5 +1,8 @@
 <?php
 require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Model.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Clase.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Usuario.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Msg.php";
 
 class Calificacion extends Model
 {
@@ -7,22 +10,18 @@ class Calificacion extends Model
 
     public function getClaseById($id)
     {
-        $clase = new Clase();
-        $clase->setTable('clases');
-        return $clase->customQuery("SELECT * FROM clases WHERE id = $id");
+        return Database::query("SELECT * FROM clases WHERE id = $id");
     }
 
     public function getEstudianteById($id)
     {
-        $estudiante = new Clase();
-        $estudiante->setTable('usuarios');
+        $estudiante = new Usuario();
         return $estudiante->customQuery("SELECT * FROM usuarios WHERE id = $id");
     }
 
     public function getmsgById($id)
     {
-        $msg = new Clase();
-        $msg->setTable('msg');
+        $msg = new Msg();
         return $msg->customQuery("SELECT * FROM msg WHERE id = $id");
     }
     public function loadView($data)
@@ -41,6 +40,4 @@ class Calificacion extends Model
         $result = $this->customQuery("SELECT COUNT(*) as count FROM msg WHERE para = $id");
         return $result[0]['count'];
     }
-
-
 }

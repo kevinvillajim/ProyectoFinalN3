@@ -1,9 +1,35 @@
 <?php
-require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Model.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/config/Database.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/models/Usuario.php";
 
 class Clase extends Model
 {
-    protected $table = "clases";
+    // Propiedades del modelo
+    public $id;
+    public $nombre;
+    public $descripcion;
+    public $claseModel;
+
+    // Base de datos
+    protected $db;  // Cambia esto a 'protected'
+
+    // Constructor
+    public function __construct()
+    {
+        $this->db = new Database('localhost', 'username', 'password', 'database');
+    }
+
+    // Obtiene todas las clases
+    public function getAll()
+    {
+        return $this->db->query("SELECT * FROM clases;");
+    }
+
+    // Obtiene los detalles de una clase
+    public function getById($id)
+    {
+        return $this->db->query("SELECT * FROM clases WHERE id = $id");
+    }
 
     public function getMaestroPorId($idMaestro)
     {
@@ -11,101 +37,88 @@ class Clase extends Model
             return null;
         } else {
             $sql = "SELECT nombre FROM usuarios WHERE id = {$idMaestro}";
-            $res = $this->db->query($sql);
-            $maestro = $res->fetch_assoc();
-            return $maestro;
+            return $this->db->query($sql);
         }
     }
-    public function getClases()
-    {
-        return $this->customQuery("SELECT * FROM clases");
-    }
+
     public function getProfesoresSinClase()
     {
-        $res = $this->customQuery("SELECT id, nombre FROM usuarios WHERE id_rol = 2 and clase_asignada is null");
-        return $res;
+        return $this->db->query("SELECT id, nombre FROM usuarios WHERE id_rol = 2 and clase_asignada is null");
     }
 
     public function create($data)
     {
-        try {
-            $this->db->begin_transaction();
-            parent::create($data);
+        $clase = $data['materia-create'];
+        $id_maestro = $data['maestro-create'] === "Sin asignar" ? null : $data['maestro-create'];
 
-            $idMaestro = $data['id_maestro'];
-            $updateUsuarioQuery = "UPDATE usuarios SET clase_asignada = LAST_INSERT_ID() WHERE id = $idMaestro";
-            $this->db->query($updateUsuarioQuery);
-            $this->db->commit();
-        } catch (Exception $e) {
-            $this->db->rollback();
-            echo "Error: " . $e->getMessage();
+        // Si id_maestro no es null, comprobar si existe en la tabla usuarios
+        if ($id_maestro !== null && !$this->maestroExists($id_maestro)) {
+            // Si el id_maestro no existe, mostrar un mensaje de error y salir
+            echo "Error: id_maestro no existe en la tabla usuarios";
+            return;
         }
+
+        // Preparar la consulta SQL
+        if ($id_maestro === null) {
+            $sql = "INSERT INTO clases (clase, id_maestro) VALUES('$clase', NULL)";
+        } else {
+            $sql = "INSERT INTO clases (clase, id_maestro) VALUES('$clase', '$id_maestro')";
+        }
+
+        // Ejecutar la consulta SQL
+        $this->db->query($sql);
+        header("Location: /clases/admin");
     }
+
     public function destroy($id)
     {
-        try {
-            $this->db->begin_transaction();
-
-            // Obtener usuarios asignados a la clase
-            $usersAssigned = $this->db->query("SELECT id FROM usuarios WHERE clase_asignada = $id")->fetch_all(MYSQLI_ASSOC);
-
-            // Actualizar clase_asignada a NULL para los usuarios asignados
-            foreach ($usersAssigned as $user) {
-                $userId = $user['id'];
-                $this->db->query("UPDATE usuarios SET clase_asignada = NULL WHERE id = $userId");
-            }
-
-            // Eliminar la clase
-            parent::destroy($id);
-
-            $this->db->commit();
-        } catch (Exception $e) {
-            $this->db->rollback();
-            echo "Error: " . $e->getMessage();
-        }
+        $this->db->query("UPDATE usuarios SET clase_asignada = NULL WHERE clase_asignada = $id");
+        $this->db->query("DELETE FROM clases WHERE id = $id");
     }
 
     public function update($data)
     {
-        $id = $data['id'];
-        $idMaestro = $data['id_maestro'];
+        $id = (int) $data['id'];
+        $clase = $data['materia-edit'];
+        $id_maestro = $data['maestro-edit'] == "Selecciona el maestro" ? null : $data['maestro-edit'];
 
-        $maestroCount = 0;
-
-        $checkMaestroQuery = "SELECT COUNT(*) FROM usuarios WHERE id = ?";
-        $stmtCheckMaestro = $this->db->prepare($checkMaestroQuery);
-        $stmtCheckMaestro->bind_param('i', $idMaestro);
-        $stmtCheckMaestro->execute();
-        $stmtCheckMaestro->bind_result($maestroCount);
-        $stmtCheckMaestro->fetch();
-        $stmtCheckMaestro->close();
-
-        if ($maestroCount > 0) {
-            $previousTeacherQry = "SELECT id_maestro FROM {$this->table} WHERE id = ?";
-            $stmtPreviousTeacher = $this->db->prepare($previousTeacherQry);
-            $stmtPreviousTeacher->bind_param('i', $id);
-            $stmtPreviousTeacher->execute();
-            $previousTeacherId = $stmtPreviousTeacher->get_result()->fetch_assoc()['id_maestro'];
-            $stmtPreviousTeacher->close();
-
-            $updateQuery = "UPDATE {$this->table} SET id_maestro = ?, clase = ? WHERE id = ?";
-            $stmt = $this->db->prepare($updateQuery);
-            $stmt->bind_param('iss', $idMaestro, $data['clase'], $id);
-            $stmt->execute();
-            $stmt->close();
-
-            $this->db->query("UPDATE usuarios SET clase_asignada = NULL WHERE id = $previousTeacherId");
-
-            $newTeacherId = $idMaestro;
-            $this->db->query("UPDATE usuarios SET clase_asignada = $id WHERE id = $newTeacherId");
-        } else {
-            echo "Error: El ID del maestro no es válido.";
+        $usuario = new Usuario();
+        if ($id_maestro !== null && !$usuario->claseExists($id_maestro)) {
+            // El maestro no existe, manejar el error aquí
+            return;
         }
-    }
 
-    private function isTeacherAvailable($teacherId)
+        if ($id_maestro === null) {
+            // Si 'maestro-edit' es 'Selecciona el maestro', solo actualiza la materia
+            $sql = "UPDATE clases SET clase = '$clase' WHERE id = $id";
+        } else {
+            // Si 'maestro-edit' no es 'Selecciona el maestro', actualiza la materia y el maestro
+            $sql = "UPDATE clases SET clase = '$clase', id_maestro = '$id_maestro' WHERE id = $id";
+        }
+
+        $this->db->query($sql);
+    }
+    public function maestroExists($idMaestro)
     {
-        $result = $this->db->query("SELECT id FROM usuarios WHERE id = $teacherId AND clase_asignada IS NULL");
-        return $result->num_rows > 0;
+        if ($idMaestro === null) {
+            return false;
+        }
+
+        $query = "SELECT * FROM usuarios WHERE id = $idMaestro";
+        $result = $this->db->query($query);
+
+        // Si la consulta falló, devolver false
+        if ($result === false) {
+            return false;
+        }
+
+        // Si hay al menos una fila en el resultado, entonces el maestro existe
+        return count($result) > 0;
+    }
+    public function getClases()
+    {
+        $query = "SELECT * FROM clases";
+        $result = $this->db->query($query);
+        return $result;
     }
 }
